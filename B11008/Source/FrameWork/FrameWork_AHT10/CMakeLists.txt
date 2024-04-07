@@ -1,0 +1,3 @@
+idf_component_register(SRCS "framework_aht10.c"
+                    INCLUDE_DIRS "./"
+                    REQUIRES "HAL_I2C")

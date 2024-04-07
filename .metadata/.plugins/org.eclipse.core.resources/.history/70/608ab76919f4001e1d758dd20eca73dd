@@ -1,0 +1,58 @@
+/************************************************************************************************************************************************
+* 文件名称：main.c
+* 文件描述：主函数
+* 文件作者：bo.liangmin
+* 版本信息：20240406--文件创建
+************************************************************************************************************************************************/
+
+
+
+/************************************************************************************************************************************************
+* include
+************************************************************************************************************************************************/
+#include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
+#include "framework_aht10.h"
+
+
+
+
+
+
+static void led_flash_task(void *arg)
+{
+    while (1)
+    {
+        //ESP_LOGI(TAG, "blmcc+++++");
+
+        FrameWork_AHT10_ReadData();
+
+//        WS2812_Blink();
+//        /* Toggle the LED state */
+//        s_led_state = !s_led_state;
+//        WS2812_setValue(s_led_state);
+        vTaskDelay(10000);
+    }
+}
+
+
+
+void app_main(void)
+{
+    vTaskDelay(1000);
+    HAL_I2C_Init();
+    vTaskDelay(40);
+
+    xTaskCreatePinnedToCore(led_flash_task, "led task", 8192, NULL, 2, NULL, tskNO_AFFINITY);
+
+    while(1)
+    {
+        //ReadMsg();
+        //ESP_LOGI(TAG, "blmcc-----");
+        vTaskDelay(1000);
+    }
+}

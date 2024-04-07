@@ -1,0 +1,3 @@
+idf_component_register(SRCS "framework_hardware.c"
+                    INCLUDE_DIRS "./"
+                    REQUIRES "HAL_Board")
