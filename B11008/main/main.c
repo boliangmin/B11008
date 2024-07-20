@@ -16,14 +16,19 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#include "hal_ws2812.h"
 #include "framework_hardware.h"
 #include "framework_aht10.h"
 
+
+#include "esp_log.h"
 
 
 /************************************************************************************************************************************************
 * define
 ************************************************************************************************************************************************/
+static const char *MAINTAG = "WS2812";
+
 
 
 
@@ -36,9 +41,49 @@
 ************************************************************************************************************************************************/
 static void led_flash_task(void *arg)
 {
+    static uint8_t dddd = 0;
+    ws2812_color_t color = {0, 0, 0};
+
     while (1)
     {
-        FrameWork_AHT10_ReadData();
+//        FrameWork_AHT10_ReadData();
+        ESP_LOGI(MAINTAG, "task run");
+
+        if(0 == dddd)
+        {
+            color.red   = 255;
+            color.green = 0;
+            color.blue  = 0;
+
+            HAL_WS2812_SetShowNum(HAL_WS2812_RIGHT2_ADDR, 1);
+            HAL_WS2812_SetShowNum(HAL_WS2812_RIGHT1_ADDR, 2);
+            HAL_WS2812_SetShowType(TYPE_DATE);
+            HAL_WS2812_SetShowNum(HAL_WS2812_LEFT2_ADDR, 3);
+            HAL_WS2812_SetShowNum(HAL_WS2812_LEFT1_ADDR, 4);
+
+            HAL_WS2812_ClkFresh(color);
+
+            dddd = 1;
+        }
+        else
+        {
+            color.red   = 0;
+            color.green = 255;
+            color.blue  = 0;
+
+            HAL_WS2812_SetShowNum(HAL_WS2812_RIGHT2_ADDR, 5);
+            HAL_WS2812_SetShowNum(HAL_WS2812_RIGHT1_ADDR, 6);
+            HAL_WS2812_SetShowType(TYPE_TIME);
+            HAL_WS2812_SetShowNum(HAL_WS2812_LEFT2_ADDR, 7);
+            HAL_WS2812_SetShowNum(HAL_WS2812_LEFT1_ADDR, 8);
+
+            HAL_WS2812_ClkFresh(color);
+
+            dddd = 0;
+        }
+
+
+
         vTaskDelay(1000);
     }
 }
@@ -52,8 +97,12 @@ static void led_flash_task(void *arg)
 ************************************************************************************************************************************************/
 void app_main(void)
 {
-    FrameWork_Hardware_Init();
-    FrameWork_AHT10_DeviceInit();
+
+
+//    FrameWork_Hardware_Init();
+//    FrameWork_AHT10_DeviceInit();
+    HAL_WS2812_Init();
+
 
     xTaskCreatePinnedToCore(led_flash_task, "led task", 8192, NULL, 2, NULL, tskNO_AFFINITY);
 
@@ -68,6 +117,5 @@ void app_main(void)
 /************************************************************************************************************************************************
 * end
 ************************************************************************************************************************************************/
-
 
 

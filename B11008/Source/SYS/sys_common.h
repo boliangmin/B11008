@@ -32,6 +32,18 @@
 #define SYS_I2C_TX_BUF_DISABLE    0
 #define SYS_I2C_RX_BUF_DISABLE    0
 
+/***********************************
+* WS2812相关定义
+***********************************/
+/* 时钟、日期面板控制管脚 */
+#define SYS_RGB_CLK_PIN           18
+/* 温湿度面板控制管脚 */
+#define SYS_RGB_HT_PIN            37
+/* 工作日指示面板控制管脚 */
+#define SYS_RGB_DAY_PIN           15
+/* 功能指示面板控制管脚 */
+#define SYS_RGB_FUNC_PIN          17
+
 
 
 #endif
